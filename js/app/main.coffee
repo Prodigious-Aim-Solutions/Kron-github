@@ -1,6 +1,6 @@
-require ['editor', '../../bower_components/marked/lib/marked'], (Editor, marked) ->
+define ['editor', 'signin', '../../bower_components/marked/lib/marked', 'DataSource', 'GithubSource'], (Editor, SignIn, marked, DataSource, GithubSource) ->
     class App
-        constructor: () ->
+        constructor: (@dataSource = {}) ->
             marked.setOptions 
               renderer: new marked.Renderer(),
               gfm: true,
@@ -10,7 +10,9 @@ require ['editor', '../../bower_components/marked/lib/marked'], (Editor, marked)
               sanitize: true,
               smartLists: true,
               smartypants: false
-            editor = new Editor(marked)
+            signin = new SignIn(@dataSource)
+            editor = new Editor(marked, @dataSource)
             return @
-    app = new App()
-    return
+    ds = new DataSource(new GithubSource())
+    app = new App(ds)
+    return app
