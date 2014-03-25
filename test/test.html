@@ -11,11 +11,7 @@
     <script src="../bower_components/mocha/mocha.js"></script>
     <script src="../bower_components/should/should.js"></script>
     <script>mocha.setup('bdd')</script>
-    
-    <script src="../js/app/main.js"></script>
-    <script src="../js/app/editor.js"></script>
-    <script src="../js/app/BlogPost.js"></script>
-    <script src="test.js"></script>
+    <script data-main="test.js" src="../bower_components/requirejs/require.js"></script>
     <script>
         mocha.checkLeaks();
         mocha.globals(['jQuery']);
