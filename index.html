@@ -24,6 +24,42 @@
 
         <!-- Add your site or application content here -->
         <div class="content">
+            <nav class="navbar navbar-default" role="navigation">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#kronNav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                      </button>
+                        <a class="navbar-brand" href="/#/">Kron-Github</a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="kronNav">
+                        <ul class="nav navbar-nav">
+                            <li><a href="/#/edit">New Post</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <div class="row">
+                <div class="signin col-md-8 col-md-offset-2">
+                    <h2>
+                        Sign In
+                    </h2>
+                    <div class="input-group">
+                        <label>User Name</label>
+                        <input type="text" class="user form-control" />
+                    </div>
+                    <div class="input-group">
+                        <label>Password</label>
+                        <input type="password" class="pass form-control" />
+                    </div>
+                    <button class="btn btn-signin">
+                        Sign In
+                    </button>
+                </div>
+            </div>
             <div class="row">
                 <div class="editor col-md-8 col-md-offset-2">
                     <h2>
@@ -50,11 +86,19 @@
                     </button>
                 </div>
             </div>
+            <div class="row">
+                <div class="posts col-md-8 col-md-offset-2">
+                    <h2>
+                        Blog Title
+                    </h2>
+                </div>
+            </div>
         </div>
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
         <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="bower_components/director/build/director.js"></script>
         <script data-main="js/app/main.js" src="bower_components/requirejs/require.js"></script>
         <script src="js/plugins.js"></script>
         <script src="js/main.js"></script>
