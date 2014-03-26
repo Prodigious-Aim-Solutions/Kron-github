@@ -6,10 +6,10 @@ define ['BlogPost'], (BlogPost) ->
         displayAll: () =>
             output = ""
             posts = @ds.get()
-            output += (display(post) for post in posts)
+            output += @display(post) for post in posts
             $('.posts').append(output)
             return @
         display: (post) =>
-            return new BlogPost(post.id, post.title, post.body, post.tags, post.author, posts.date, @marked)
+            return new BlogPost(post.id, post.title, post.body, post.tags, post.author, post.date, @marked).display()
         
     return DisplayPosts

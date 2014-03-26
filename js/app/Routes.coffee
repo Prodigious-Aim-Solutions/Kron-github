@@ -11,11 +11,12 @@ define () ->
             return @
         main: () =>
             @_hideAll()
-            $('.posts').show()
+            $('.posts').parent().show()
             return @
         edit: (id) =>
             $editor = $('.editor')
             @_hideAll()
+            $editor.parent().show()
             if id?
                 post = @ds.get(id)
                 $editor.find('.title').val(post.title)

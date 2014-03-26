@@ -39,7 +39,23 @@
       };
 
       GithubSource.prototype.getAll = function() {
-        return this;
+        return [
+          {
+            id: '1',
+            title: 'My Blog Post',
+            body: 'Interesting content!!',
+            author: 'Corbzilla',
+            tags: 'introduction',
+            date: 'March'
+          }, {
+            id: '2',
+            title: 'My Other Blog Post',
+            body: 'More ! ! Interesting content!!',
+            author: 'Corbzilla',
+            tags: 'introduction',
+            date: 'March 2'
+          }
+        ];
       };
 
       return GithubSource;

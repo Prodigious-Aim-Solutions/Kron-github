@@ -25,7 +25,7 @@
 
       Routes.prototype.main = function() {
         this._hideAll();
-        $('.posts').show();
+        $('.posts').parent().show();
         return this;
       };
 
@@ -33,6 +33,7 @@
         var $editor, post;
         $editor = $('.editor');
         this._hideAll();
+        $editor.parent().show();
         if (id != null) {
           post = this.ds.get(id);
           $editor.find('.title').val(post.title);

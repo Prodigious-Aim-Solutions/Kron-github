@@ -15,24 +15,19 @@
       }
 
       DisplayPosts.prototype.displayAll = function() {
-        var output, post, posts;
+        var output, post, posts, _i, _len;
         output = "";
         posts = this.ds.get();
-        output += (function() {
-          var _i, _len, _results;
-          _results = [];
-          for (_i = 0, _len = posts.length; _i < _len; _i++) {
-            post = posts[_i];
-            _results.push(display(post));
-          }
-          return _results;
-        })();
+        for (_i = 0, _len = posts.length; _i < _len; _i++) {
+          post = posts[_i];
+          output += this.display(post);
+        }
         $('.posts').append(output);
         return this;
       };
 
       DisplayPosts.prototype.display = function(post) {
-        return new BlogPost(post.id, post.title, post.body, post.tags, post.author, posts.date, this.marked);
+        return new BlogPost(post.id, post.title, post.body, post.tags, post.author, post.date, this.marked).display();
       };
 
       return DisplayPosts;
