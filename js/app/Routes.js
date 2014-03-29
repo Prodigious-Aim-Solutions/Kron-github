@@ -24,8 +24,11 @@
       }
 
       Routes.prototype.main = function() {
+        var $posts;
+        $posts = $('.posts');
         this._hideAll();
-        $('.posts').parent().show();
+        $posts.parent().show();
+        $posts.find('article').show();
         return this;
       };
 
@@ -46,16 +49,13 @@
       };
 
       Routes.prototype.post = function(id) {
-        var $post, post;
-        $post = $('.post');
+        var $posts;
+        $posts = $('.posts');
         this._hideAll();
+        $posts.find('article').hide();
         if (id != null) {
-          post = this.ds.get(id);
-          $post.find('.title').val(post.title);
-          $post.find('.body').val(post.body);
-          $post.find('.author').val(post.author);
-          $post.find('.tags').val(post.tags);
-          return $post.find('.date').val(post.date);
+          $("#post" + id).parents('.row').show();
+          return $("#post" + id).show();
         } else {
           return this.router.setRoute('/');
         }

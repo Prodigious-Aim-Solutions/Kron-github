@@ -10,8 +10,10 @@ define () ->
             @router.init()
             return @
         main: () =>
+            $posts = $('.posts')
             @_hideAll()
-            $('.posts').parent().show()
+            $posts.parent().show()
+            $posts.find('article').show()
             return @
         edit: (id) =>
             $editor = $('.editor')
@@ -26,15 +28,12 @@ define () ->
             $editor.show()
             return @
         post: (id) =>
-            $post = $('.post')
+            $posts = $('.posts')
             @_hideAll()
+            $posts.find('article').hide()
             if id?
-                post = @ds.get(id)
-                $post.find('.title').val(post.title)
-                $post.find('.body').val(post.body)
-                $post.find('.author').val(post.author)
-                $post.find('.tags').val(post.tags)
-                $post.find('.date').val(post.date)
+                $("#post#{ id }").parents('.row').show()
+                $("#post#{ id }").show()
             else
                 @router.setRoute('/')
         _hideAll: () =>

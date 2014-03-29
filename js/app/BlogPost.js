@@ -17,11 +17,12 @@
         return this;
       }
 
-      BlogPost.prototype.template = '<article>' + '<h3 class=\'title\'><a href=\'/post/{id}\'>{title}</a></h3>' + '{body}' + '<div class=\'author\'>{author}</div>' + '<div class=\'tags\'>{tags}</div>' + '<div class=\'date\'>{date}</div>' + '</article>';
+      BlogPost.prototype.template = '<article id=\'post{id}\'>' + '<h3 class=\'title\'><a href=\'#/display/{id}\'>{title}</a></h3>' + '{body}' + '<div class=\'author\'>{author}</div>' + '<div class=\'tags\'>{tags}</div>' + '<div class=\'date\'>{date}</div>' + '</article>';
 
       BlogPost.prototype.display = function() {
         var output;
-        output = this.template.replace('{title}', this.title);
+        output = this.template.replace(/{id}/g, this.id);
+        output = output.replace('{title}', this.title);
         output = output.replace('{body}', this.marked(this.body));
         output = output.replace('{author}', this.author);
         output = output.replace('{tags}', this.tags);
