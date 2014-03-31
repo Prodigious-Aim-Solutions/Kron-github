@@ -17,9 +17,9 @@
           smartypants: false
         });
         signin = new SignIn(this.dataSource);
-        editor = new Editor(marked, this.dataSource);
+        editor = new Editor(this.dataSource, marked);
         displayPage = new DisplayPosts(this.dataSource, marked);
-        routes = new Routes(this.dataSource);
+        routes = new Routes(this.dataSource, displayPage);
         return this;
       }
 

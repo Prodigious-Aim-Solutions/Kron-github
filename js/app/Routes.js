@@ -5,10 +5,12 @@
   define(function() {
     var Routes;
     return Routes = (function() {
-      function Routes(ds) {
+      function Routes(ds, display) {
         var routes;
         this.ds = ds != null ? ds : {};
+        this.display = display;
         this._hideAll = __bind(this._hideAll, this);
+        this.signin = __bind(this.signin, this);
         this.post = __bind(this.post, this);
         this.edit = __bind(this.edit, this);
         this.main = __bind(this.main, this);
@@ -16,7 +18,8 @@
           '/': this.main,
           '/edit': this.edit,
           '/edit/:id': this.edit,
-          '/display/:id': this.post
+          '/display/:id': this.post,
+          '/signin/': this.signin
         };
         this.router = Router(routes);
         this.router.init();
@@ -27,6 +30,8 @@
         var $posts;
         $posts = $('.posts');
         this._hideAll();
+        $posts.find('article').remove();
+        this.display.displayAll();
         $posts.parent().show();
         $posts.find('article').show();
         return this;
@@ -55,10 +60,19 @@
         $posts.find('article').hide();
         if (id != null) {
           $("#post" + id).parents('.row').show();
-          return $("#post" + id).show();
+          $("#post" + id).show();
         } else {
-          return this.router.setRoute('/');
+          this.router.setRoute('/');
         }
+        return this;
+      };
+
+      Routes.prototype.signin = function() {
+        var $signin;
+        this._hideAll();
+        $signin = $('.signin');
+        $signin.parent().show();
+        return this;
       };
 
       Routes.prototype._hideAll = function() {

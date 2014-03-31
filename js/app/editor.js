@@ -5,7 +5,8 @@
   define(['../../bower_components/marked/lib/marked', 'BlogPost', '../../bower_components/localforage/dist/localforage'], function(marked, BlogPost, localForage) {
     var Editor;
     Editor = (function() {
-      function Editor(markdownEditor) {
+      function Editor(ds, markdownEditor) {
+        this.ds = ds != null ? ds : {};
         this.markdownEditor = markdownEditor != null ? markdownEditor : {};
         this.savePost = __bind(this.savePost, this);
         this.startAutoSave = __bind(this.startAutoSave, this);
@@ -19,12 +20,13 @@
         var blogPost;
         blogPost = {
           title: $('.title').val(),
-          body: marked($('.body').val()),
+          body: $('.body').val(),
           tags: $('.tags').val(),
           author: $('.author').val(),
           date: moment()
         };
-        console.log(blogPost.body);
+        this.ds.create(blogPost);
+        window.location.hash = '#/';
       };
 
       Editor.prototype.startAutoSave = function(e) {

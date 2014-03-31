@@ -1,17 +1,20 @@
 define () ->
     class Routes
-        constructor: (@ds = {}) ->
+        constructor: (@ds = {}, @display) ->
             routes =
                 '/': @main,
                 '/edit': @edit,
                 '/edit/:id': @edit,
                 '/display/:id': @post
+                '/signin/': @signin
             @router = Router(routes)
             @router.init()
             return @
         main: () =>
             $posts = $('.posts')
             @_hideAll()
+            $posts.find('article').remove()
+            @display.displayAll()
             $posts.parent().show()
             $posts.find('article').show()
             return @
@@ -36,5 +39,11 @@ define () ->
                 $("#post#{ id }").show()
             else
                 @router.setRoute('/')
+            return @
+        signin: () =>
+            @_hideAll()
+            $signin = $('.signin')
+            $signin.parent().show()
+            return @
         _hideAll: () =>
             $('.row').hide()
