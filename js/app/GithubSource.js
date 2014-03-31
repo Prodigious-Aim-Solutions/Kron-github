@@ -11,35 +11,7 @@
         this.remove = __bind(this.remove, this);
         this.update = __bind(this.update, this);
         this.create = __bind(this.create, this);
-        return this;
-      }
-
-      GithubSource.prototype.login = function(user, pass) {
-        this.github = new Github({
-          username: user,
-          password: pass,
-          auth: 'basic'
-        });
-      };
-
-      GithubSource.prototype.create = function(item) {
-        return this;
-      };
-
-      GithubSource.prototype.update = function(item) {
-        return this;
-      };
-
-      GithubSource.prototype.remove = function(item) {
-        return this;
-      };
-
-      GithubSource.prototype.get = function(item) {
-        return this;
-      };
-
-      GithubSource.prototype.getAll = function() {
-        return [
+        this.source = [
           {
             id: '1',
             title: 'My Blog Post',
@@ -56,6 +28,36 @@
             date: 'March 2'
           }
         ];
+        return this;
+      }
+
+      GithubSource.prototype.login = function(user, pass) {
+        this.github = new Github({
+          username: user,
+          password: pass,
+          auth: 'basic'
+        });
+      };
+
+      GithubSource.prototype.create = function(item) {
+        this.source.push(item);
+        return this;
+      };
+
+      GithubSource.prototype.update = function(item) {
+        return this;
+      };
+
+      GithubSource.prototype.remove = function(item) {
+        return this;
+      };
+
+      GithubSource.prototype.get = function(item) {
+        return this;
+      };
+
+      GithubSource.prototype.getAll = function() {
+        return this.source;
       };
 
       return GithubSource;

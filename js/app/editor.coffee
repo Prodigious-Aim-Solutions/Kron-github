@@ -1,18 +1,19 @@
 define ['../../bower_components/marked/lib/marked', 'BlogPost', '../../bower_components/localforage/dist/localforage'], (marked, BlogPost, localForage) ->
 
     class Editor
-        constructor:(@markdownEditor = {}) ->
+        constructor:(@ds = {}, @markdownEditor = {}) ->
             $('.btn-submit').on('click', @submitMarkdown)
             $('.title, .body').on('keyup', @startAutoSave)
             return @
         submitMarkdown:(e) =>
             blogPost = 
                 title: $('.title').val()
-                body: marked($('.body').val())
+                body: $('.body').val()
                 tags: $('.tags').val()
                 author: $('.author').val()
                 date: moment()
-            console.log(blogPost.body)
+            @ds.create(blogPost)
+            window.location.hash = '#/'
             return
         startAutoSave: (e) =>
             $('.title, .body').off('keyup', @startAutoSave)

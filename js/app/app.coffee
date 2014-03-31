@@ -11,9 +11,9 @@ define ['editor', 'signin', 'DisplayPosts', '../../bower_components/marked/lib/m
               smartLists: true,
               smartypants: false
             signin = new SignIn(@dataSource)
-            editor = new Editor(marked, @dataSource)
+            editor = new Editor(@dataSource, marked)
             displayPage = new DisplayPosts(@dataSource, marked)
-            routes = new Routes(@dataSource)
+            routes = new Routes(@dataSource, displayPage)
             return @
         
     return App

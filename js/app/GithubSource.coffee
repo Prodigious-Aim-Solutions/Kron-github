@@ -1,23 +1,7 @@
 define () ->
     class GithubSource
         constructor: () ->
-            return @
-        login: (user, pass) ->
-            @github = new Github
-                username: user,
-                password: pass,
-                auth: 'basic'
-            return
-        create: (item) =>
-            return @
-        update: (item) =>
-            return @
-        remove: (item) =>
-            return @
-        get: (item) =>
-            return @
-        getAll: () =>
-            return [
+            @source=[
                 {
                     id: '1',
                     title: 'My Blog Post',
@@ -35,4 +19,22 @@ define () ->
                     date: 'March 2'
                 }
             ]
+            return @
+        login: (user, pass) ->
+            @github = new Github
+                username: user,
+                password: pass,
+                auth: 'basic'
+            return
+        create: (item) =>
+            @source.push(item)
+            return @
+        update: (item) =>
+            return @
+        remove: (item) =>
+            return @
+        get: (item) =>
+            return @
+        getAll: () =>
+            return @source
     return GithubSource
