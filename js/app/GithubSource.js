@@ -2,7 +2,7 @@
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  define(function() {
+  define(['octokit', 'BlogPost'], function(Octokit, BlogPost) {
     var GithubSource;
     GithubSource = (function() {
       function GithubSource() {
@@ -11,36 +11,21 @@
         this.remove = __bind(this.remove, this);
         this.update = __bind(this.update, this);
         this.create = __bind(this.create, this);
-        this.source = [
-          {
-            id: '1',
-            title: 'My Blog Post',
-            body: 'Interesting content!!',
-            author: 'Corbzilla',
-            tags: 'introduction',
-            date: 'March'
-          }, {
-            id: '2',
-            title: 'My Other Blog Post',
-            body: 'More ! ! Interesting content!!',
-            author: 'Corbzilla',
-            tags: 'introduction',
-            date: 'March 2'
-          }
-        ];
+        this.source = null;
         return this;
       }
 
       GithubSource.prototype.login = function(user, pass) {
-        this.github = new Github({
+        var repo;
+        this.github = new Octokit({
           username: user,
-          password: pass,
-          auth: 'basic'
+          password: pass
         });
+        repo = this.github.getRepo('Corbzilla', 'Corbzilla.github.io');
+        return this.source = repo.getBranch();
       };
 
       GithubSource.prototype.create = function(item) {
-        this.source.push(item);
         return this;
       };
 
@@ -57,7 +42,24 @@
       };
 
       GithubSource.prototype.getAll = function() {
-        return this.source;
+        var id;
+        this.blogPosts = [];
+        if (this.source != null) {
+          id = 0;
+          this.source.contents('posts/Corbzilla', false).done((function(_this) {
+            return function(posts) {
+              var post, title, _i, _len;
+              for (_i = 0, _len = posts.length; _i < _len; _i++) {
+                post = posts[_i];
+                title = post.name.split('.')[0].split('-').join(' ');
+                _this.source.read("posts/Corbzilla/" + post.name).done(function(file) {
+                  _this.blogPosts.push(new BlogPost(id, title, file.contents, '', 'Corbzilla', 'today'));
+                });
+              }
+            };
+          })(this));
+        }
+        return this.blogPosts;
       };
 
       return GithubSource;

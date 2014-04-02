@@ -2,17 +2,16 @@
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  define(function() {
+  define(['../../bower_components/marked/lib/marked'], function(marked) {
     var BlogPost;
     BlogPost = (function() {
-      function BlogPost(id, title, body, tags, author, date, marked) {
+      function BlogPost(id, title, body, tags, author, date) {
         this.id = id != null ? id : '';
         this.title = title != null ? title : '';
         this.body = body != null ? body : '';
         this.tags = tags != null ? tags : '';
         this.author = author != null ? author : '';
         this.date = date != null ? date : '';
-        this.marked = marked != null ? marked : {};
         this.display = __bind(this.display, this);
         return this;
       }

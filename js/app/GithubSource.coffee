@@ -1,33 +1,15 @@
-define () ->
+define ['octokit', 'BlogPost'],  (Octokit, BlogPost) ->
     class GithubSource
         constructor: () ->
-            @source=[
-                {
-                    id: '1',
-                    title: 'My Blog Post',
-                    body: 'Interesting content!!',
-                    author: 'Corbzilla',
-                    tags: 'introduction',
-                    date: 'March'
-                },
-                {
-                    id: '2',
-                    title: 'My Other Blog Post',
-                    body: 'More ! ! Interesting content!!',
-                    author: 'Corbzilla',
-                    tags: 'introduction',
-                    date: 'March 2'
-                }
-            ]
+            @source = null
             return @
         login: (user, pass) ->
-            @github = new Github
+            @github = new Octokit
                 username: user,
-                password: pass,
-                auth: 'basic'
-            return
+                password: pass
+            repo = @github.getRepo('Corbzilla', 'Corbzilla.github.io')
+            @source = repo.getBranch()
         create: (item) =>
-            @source.push(item)
             return @
         update: (item) =>
             return @
@@ -36,5 +18,16 @@ define () ->
         get: (item) =>
             return @
         getAll: () =>
-            return @source
+            @blogPosts = []
+            if @source?                
+                id = 0
+                @source.contents('posts/Corbzilla', false).done (posts) =>
+                    for post in posts
+                        title = post.name.split('.')[0].split('-').join(' ')
+                        @source.read("posts/Corbzilla/#{ post.name }").done (file) =>
+                            @blogPosts.push new BlogPost(id, title, file.contents, '', 'Corbzilla', 'today')
+                            return
+                    return
+            return @blogPosts
+        
     return GithubSource

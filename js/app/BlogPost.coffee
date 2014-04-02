@@ -1,7 +1,7 @@
-define () ->
+define ['../../bower_components/marked/lib/marked'], (marked) ->
 
     class BlogPost
-        constructor: (@id='', @title='', @body='', @tags='', @author='', @date='', @marked={}) ->
+        constructor: (@id='', @title='', @body='', @tags='', @author='', @date='') ->
             return @
         template: '<article id=\'post{id}\'>' +
                   '<h3 class=\'title\'><a href=\'#/display/{id}\'>{title}</a></h3>' +
