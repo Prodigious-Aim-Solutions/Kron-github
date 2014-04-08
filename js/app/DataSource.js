@@ -14,30 +14,27 @@
         return this;
       }
 
-      DataSource.prototype.login = function(user, pass) {
-        this._source.login({
-          user: user,
-          pass: pass
-        });
+      DataSource.prototype.login = function(user, pass, cb) {
+        this._source.login(user, pass);
       };
 
-      DataSource.prototype.create = function(item) {
+      DataSource.prototype.create = function(item, cb) {
         return this._source.create(item);
       };
 
-      DataSource.prototype.update = function(item) {
+      DataSource.prototype.update = function(item, cb) {
         return this.source.update(item);
       };
 
-      DataSource.prototype.remove = function(item) {
+      DataSource.prototype.remove = function(item, cb) {
         return this._source.remove(item);
       };
 
-      DataSource.prototype.get = function(id) {
-        if (id) {
-          return this._source.get(id);
-        } else {
-          return this._source.getAll();
+      DataSource.prototype.get = function(item, cb) {
+        if (item && cb) {
+          return this._source.get(item, cb);
+        } else if (cb && !item) {
+          return this._source.getAll(cb);
         }
       };
 

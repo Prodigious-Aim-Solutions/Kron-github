@@ -13,6 +13,7 @@
         this.author = author != null ? author : '';
         this.date = date != null ? date : '';
         this.display = __bind(this.display, this);
+        this.marked = marked;
         return this;
       }
 

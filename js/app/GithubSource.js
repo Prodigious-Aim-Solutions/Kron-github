@@ -6,6 +6,9 @@
     var GithubSource;
     GithubSource = (function() {
       function GithubSource() {
+        this._getIndex = __bind(this._getIndex, this);
+        this._getPost = __bind(this._getPost, this);
+        this._getItems = __bind(this._getItems, this);
         this.getAll = __bind(this.getAll, this);
         this.get = __bind(this.get, this);
         this.remove = __bind(this.remove, this);
@@ -25,41 +28,92 @@
         return this.source = repo.getBranch();
       };
 
-      GithubSource.prototype.create = function(item) {
-        return this;
-      };
-
-      GithubSource.prototype.update = function(item) {
-        return this;
-      };
-
-      GithubSource.prototype.remove = function(item) {
-        return this;
-      };
-
-      GithubSource.prototype.get = function(item) {
-        return this;
-      };
-
-      GithubSource.prototype.getAll = function() {
-        var id;
-        this.blogPosts = [];
-        if (this.source != null) {
-          id = 0;
-          this.source.contents('posts/Corbzilla', false).done((function(_this) {
-            return function(posts) {
-              var post, title, _i, _len;
-              for (_i = 0, _len = posts.length; _i < _len; _i++) {
-                post = posts[_i];
-                title = post.name.split('.')[0].split('-').join(' ');
-                _this.source.read("posts/Corbzilla/" + post.name).done(function(file) {
-                  _this.blogPosts.push(new BlogPost(id, title, file.contents, '', 'Corbzilla', 'today'));
-                });
-              }
+      GithubSource.prototype.create = function(item, cb) {
+        var filename;
+        if ((item != null) && (item.title != null) && (item.body != null)) {
+          filename = 'posts/Corbzilla/data/' + item.title.split(' ').join('-') + ".md";
+          this._getIndex().then((function(_this) {
+            return function(index) {
+              var indexDom;
+              indexDom = $(index.contents).find('.posts').append(item);
+              _this.source.write('index.html', indexDom.html(), '', false);
+              return _this.source.write(filename, item.body, "Added post " + filename, false);
             };
           })(this));
         }
-        return this.blogPosts;
+        return this;
+      };
+
+      GithubSource.prototype.update = function(item, cb) {
+        this.create(item);
+        return this;
+      };
+
+      GithubSource.prototype.remove = function(item, cb) {
+        var filename;
+        if (item && item.title) {
+          filename = 'posts/Corbzilla/data/' + item.title.split(' ').join('-') + ".md";
+          this.source.remove(filename, item.body, "Removed post " + filename, false);
+        }
+        return this;
+      };
+
+      GithubSource.prototype.get = function(item, cb) {
+        var filename;
+        filename = 'posts/Corbzilla/data/' + item.title.split(' ').join('-') + ".md";
+        this._getPost.then((function(_this) {
+          return function(post) {
+            return cb(new BlogPost(post).display());
+          };
+        })(this));
+        return [];
+      };
+
+      GithubSource.prototype.getAll = function(cb) {
+        var id;
+        id = 0;
+        this.blogPosts = [];
+        if (this.source != null) {
+          return this._getItems().then((function(_this) {
+            return function(posts) {
+              var i, post, _i, _len, _results;
+              _results = [];
+              for (i = _i = 0, _len = posts.length; _i < _len; i = ++_i) {
+                post = posts[i];
+                _results.push((function(post) {
+                  return _this._getPost(post).then(function(p) {
+                    var newPost, title;
+                    title = post.name.split('.')[0].split('-').join(' ');
+                    newPost = {};
+                    newPost.id = id;
+                    newPost.title = title;
+                    newPost.body = p.content;
+                    newPost.author = 'Corbzilla';
+                    newPost.date = 'March';
+                    newPost.tags = 'new';
+                    id++;
+                    return cb(newPost);
+                  });
+                })(post));
+              }
+              return _results;
+            };
+          })(this));
+        } else {
+          return [];
+        }
+      };
+
+      GithubSource.prototype._getItems = function() {
+        return this.source.contents('posts/Corbzilla/data', false);
+      };
+
+      GithubSource.prototype._getPost = function(post) {
+        return this.source.read("posts/Corbzilla/data/" + post.name);
+      };
+
+      GithubSource.prototype._getIndex = function() {
+        return this.source.read('index.html');
       };
 
       return GithubSource;
