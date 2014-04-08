@@ -2,62 +2,118 @@
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  define(function() {
+  define(['octokit', 'BlogPost'], function(Octokit, BlogPost) {
     var GithubSource;
     GithubSource = (function() {
       function GithubSource() {
+        this._getIndex = __bind(this._getIndex, this);
+        this._getPost = __bind(this._getPost, this);
+        this._getItems = __bind(this._getItems, this);
         this.getAll = __bind(this.getAll, this);
         this.get = __bind(this.get, this);
         this.remove = __bind(this.remove, this);
         this.update = __bind(this.update, this);
         this.create = __bind(this.create, this);
-        this.source = [
-          {
-            id: '1',
-            title: 'My Blog Post',
-            body: 'Interesting content!!',
-            author: 'Corbzilla',
-            tags: 'introduction',
-            date: 'March'
-          }, {
-            id: '2',
-            title: 'My Other Blog Post',
-            body: 'More ! ! Interesting content!!',
-            author: 'Corbzilla',
-            tags: 'introduction',
-            date: 'March 2'
-          }
-        ];
+        this.source = null;
         return this;
       }
 
       GithubSource.prototype.login = function(user, pass) {
-        this.github = new Github({
+        var repo;
+        this.github = new Octokit({
           username: user,
-          password: pass,
-          auth: 'basic'
+          password: pass
         });
+        repo = this.github.getRepo('Corbzilla', 'Corbzilla.github.io');
+        return this.source = repo.getBranch();
       };
 
-      GithubSource.prototype.create = function(item) {
-        this.source.push(item);
+      GithubSource.prototype.create = function(item, cb) {
+        var filename;
+        if ((item != null) && (item.title != null) && (item.body != null)) {
+          filename = 'posts/Corbzilla/data/' + item.title.split(' ').join('-') + ".md";
+          this._getIndex().then((function(_this) {
+            return function(index) {
+              var indexDom;
+              indexDom = $(index.contents).find('.posts').append(item);
+              _this.source.write('index.html', indexDom.html(), '', false);
+              return _this.source.write(filename, item.body, "Added post " + filename, false);
+            };
+          })(this));
+        }
         return this;
       };
 
-      GithubSource.prototype.update = function(item) {
+      GithubSource.prototype.update = function(item, cb) {
+        this.create(item);
         return this;
       };
 
-      GithubSource.prototype.remove = function(item) {
+      GithubSource.prototype.remove = function(item, cb) {
+        var filename;
+        if (item && item.title) {
+          filename = 'posts/Corbzilla/data/' + item.title.split(' ').join('-') + ".md";
+          this.source.remove(filename, item.body, "Removed post " + filename, false);
+        }
         return this;
       };
 
-      GithubSource.prototype.get = function(item) {
-        return this;
+      GithubSource.prototype.get = function(item, cb) {
+        var filename;
+        filename = 'posts/Corbzilla/data/' + item.title.split(' ').join('-') + ".md";
+        this._getPost.then((function(_this) {
+          return function(post) {
+            return cb(new BlogPost(post).display());
+          };
+        })(this));
+        return [];
       };
 
-      GithubSource.prototype.getAll = function() {
-        return this.source;
+      GithubSource.prototype.getAll = function(cb) {
+        var id;
+        id = 0;
+        this.blogPosts = [];
+        if (this.source != null) {
+          return this._getItems().then((function(_this) {
+            return function(posts) {
+              var i, post, _i, _len, _results;
+              _results = [];
+              for (i = _i = 0, _len = posts.length; _i < _len; i = ++_i) {
+                post = posts[i];
+                _results.push((function(post) {
+                  return _this._getPost(post).then(function(p) {
+                    var newPost, title;
+                    title = post.name.split('.')[0].split('-').join(' ');
+                    newPost = {};
+                    newPost.id = id;
+                    newPost.title = title;
+                    newPost.body = p.content;
+                    newPost.author = 'Corbzilla';
+                    newPost.date = 'March';
+                    newPost.tags = 'new';
+                    id++;
+                    return cb(newPost);
+                  });
+                })(post));
+              }
+              return _results;
+            };
+          })(this));
+        } else {
+          return [];
+        }
+      };
+
+      GithubSource.prototype._getItems = function() {
+        return this.source.contents('posts/Corbzilla/data', false);
+      };
+
+      GithubSource.prototype._getPost = function(post) {
+        return this.source.read("posts/Corbzilla/data/" + post.name);
+      };
+
+      GithubSource.prototype._getIndex = function() {
+        return this.source.read('index.html');
       };
 
       return GithubSource;

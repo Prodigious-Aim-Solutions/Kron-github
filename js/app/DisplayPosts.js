@@ -15,19 +15,16 @@
       }
 
       DisplayPosts.prototype.displayAll = function() {
-        var output, post, posts, _i, _len;
+        var output;
         output = "";
-        posts = this.ds.get();
-        for (_i = 0, _len = posts.length; _i < _len; _i++) {
-          post = posts[_i];
-          output += this.display(post);
-        }
-        $('.posts').append(output);
+        this.ds.get(null, this.display);
         return this;
       };
 
       DisplayPosts.prototype.display = function(post) {
-        return new BlogPost(post.id, post.title, post.body, post.tags, post.author, post.date, this.marked).display();
+        var blogPost;
+        blogPost = new BlogPost(post.id, post.title, post.body, post.tags, post.author, post.date, this.marked).display();
+        return $('.posts').append(blogPost);
       };
 
       return DisplayPosts;

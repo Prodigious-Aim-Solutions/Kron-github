@@ -2,20 +2,18 @@ define () ->
     class DataSource
         constructor: (@_source = {}) ->
             return @
-        login: (user, pass) ->
-            @_source.login
-                user: user,
-                pass: pass
+        login: (user, pass, cb) ->
+            @_source.login user, pass
             return
-        create: (item)  =>
+        create: (item, cb)  =>
             @_source.create(item)
-        update: (item) =>
+        update: (item, cb) =>
             @source.update(item)
-        remove: (item) =>
+        remove: (item, cb) =>
             @_source.remove(item)
-        get: (id) =>
-            if id
-                return @_source.get(id)
-            else
-                return @_source.getAll()
+        get: (item, cb) =>
+            if item && cb
+                return @_source.get(item, cb)
+            else if cb && !item
+                return @_source.getAll(cb)
     return DataSource
