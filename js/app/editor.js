@@ -25,11 +25,7 @@
           author: $('.author').val(),
           date: moment()
         };
-        this.ds.create(blogPost);
-        $('.title').val('');
-        $('.body').val('');
-        $('.tags').val('');
-        $('.author').val('');
+        $('.editor input, .editor textarea').val('');
         window.location.hash = '#/';
       };
 

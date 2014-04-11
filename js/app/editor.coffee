@@ -2,8 +2,8 @@ define ['../../bower_components/marked/lib/marked', 'BlogPost', '../../bower_com
 
     class Editor
         constructor:(@ds = {}, @markdownEditor = {}) ->
-            $('.btn-submit').on('click', @submitMarkdown)
-            $('.title, .body').on('keyup', @startAutoSave)
+            $('.btn-submit').on 'click', @submitMarkdown
+            $('.title, .body').on 'keyup', @startAutoSave
             return @
         submitMarkdown:(e) =>
             blogPost = 
@@ -12,11 +12,8 @@ define ['../../bower_components/marked/lib/marked', 'BlogPost', '../../bower_com
                 tags: $('.tags').val()
                 author: $('.author').val()
                 date: moment()
-            @ds.create(blogPost)
-            $('.title').val('')
-            $('.body').val('')
-            $('.tags').val('')
-            $('.author').val('')
+            #@ds.create(blogPost)
+            $('.editor input, .editor textarea').val('')
             window.location.hash = '#/'
             return
         startAutoSave: (e) =>
