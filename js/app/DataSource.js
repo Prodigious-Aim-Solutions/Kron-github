@@ -11,6 +11,7 @@
         this.remove = __bind(this.remove, this);
         this.update = __bind(this.update, this);
         this.create = __bind(this.create, this);
+        this.login = __bind(this.login, this);
         return this;
       }
 

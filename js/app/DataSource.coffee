@@ -2,7 +2,7 @@ define () ->
     class DataSource
         constructor: (@_source = {}) ->
             return @
-        login: (user, pass, cb) ->
+        login: (user, pass, cb) =>
             @_source.login user, pass
             return
         create: (item, cb)  =>
