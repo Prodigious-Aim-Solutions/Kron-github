@@ -26,6 +26,10 @@
           date: moment()
         };
         this.ds.create(blogPost);
+        $('.title').val('');
+        $('.body').val('');
+        $('.tags').val('');
+        $('.author').val('');
         window.location.hash = '#/';
       };
 

@@ -13,6 +13,10 @@ define ['../../bower_components/marked/lib/marked', 'BlogPost', '../../bower_com
                 author: $('.author').val()
                 date: moment()
             @ds.create(blogPost)
+            $('.title').val('')
+            $('.body').val('')
+            $('.tags').val('')
+            $('.author').val('')
             window.location.hash = '#/'
             return
         startAutoSave: (e) =>

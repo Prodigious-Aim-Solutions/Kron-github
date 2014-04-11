@@ -9,11 +9,17 @@
         this.ds = ds != null ? ds : {};
         this.doSignIn = __bind(this.doSignIn, this);
         $('.btn-signin').on('click', this.doSignIn);
+        $('.signin input').on('keyup', this.doSignIn);
         return this;
       }
 
       SignIn.prototype.doSignIn = function(e) {
-        this.ds.login($('.user').val(), $('.pass').val());
+        if (e.type === 'click' || (e.type === 'keyup' && e.which === 13)) {
+          this.ds.login($('.user').val(), $('.pass').val());
+          $('.user').val('');
+          $('.pass').val('');
+          window.location.hash = '#/';
+        }
         return this;
       };
 
