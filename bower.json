@@ -25,6 +25,7 @@
     "localforage": "~0.2.0",
     "director": "~1.2.2",
     "octokit": "~0.9.18",
-    "underscore": "~1.6.0"
+    "underscore": "~1.6.0",
+    "pubsub-js": "~1.4.2"
   }
 }
