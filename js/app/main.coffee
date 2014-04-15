@@ -3,6 +3,7 @@ requirejs.config
         octokit: '../../bower_components/octokit/octokit'
         underscore: '../../bower_components/underscore/underscore'
         jquery: '../../bower_components/jquery/dist/jquery'
+        PubSub: '../../bower_components/pubsub-js/src/pubsub'
 
 define ['app', 'DataSource', 'GithubSource'], (App, DataSource, GithubSource) ->
     

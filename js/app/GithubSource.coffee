@@ -3,32 +3,40 @@ define ['octokit', 'BlogPost'],  (Octokit, BlogPost) ->
         constructor: () ->
             @source = null
             return @
-        login: (user, pass) ->
+        login: (user, pass, cb) ->
             @github = new Octokit
                 username: user,
                 password: pass
             repo = @github.getRepo('Corbzilla', 'Corbzilla.github.io')
             @source = repo.getBranch()
+            if cb? && typeof cb == 'function'
+                cb()
         create: (item, cb) =>
             if item? && item.title? && item.body?
                 filename = 'posts/Corbzilla/data/' + item.title.split(' ').join('-') + ".md"
                 @_getIndex().then (index) =>
-                    indexDom = $(index.contents).find('.posts').append(item)
+                    indexDom = $(index.content)
+                    indexDom.find('.posts').append(item)
                     @source.write('index.html', indexDom.html(), '', false)
                     @source.write(filename, item.body, "Added post #{ filename }", false)
+                    if cb? && typeof cb == 'function'
+                        cb()
             return @
         update: (item, cb) =>
-            @create(item)
+            @create(item, cb)
             return @
         remove: (item, cb) =>
             if item && item.title
                 filename = 'posts/Corbzilla/data/' + item.title.split(' ').join('-') + ".md"
                 @source.remove(filename, item.body, "Removed post #{ filename }", false)
+                if cb? && typeof cb == 'function'
+                    cb()
             return @
         get: (item, cb) =>
             filename = 'posts/Corbzilla/data/' + item.title.split(' ').join('-') + ".md"
             @_getPost.then (post) =>
-                cb(new BlogPost(post).display())
+                if cb? && typeof cb == 'function'
+                    cb(new BlogPost(post).display())
             return []
         getAll: (cb) =>
             id = 0
@@ -46,7 +54,8 @@ define ['octokit', 'BlogPost'],  (Octokit, BlogPost) ->
                             newPost.date = 'March'
                             newPost.tags = 'new'
                             id++
-                            cb(newPost)
+                            if cb? && typeof cb == 'function'
+                                cb(newPost)
                 
             else
                 return []

@@ -1,4 +1,4 @@
-define () ->
+define ['PubSub'], (PubSub) ->    
     class DataSource
         constructor: (@_source = {}) ->
             return @
@@ -6,14 +6,14 @@ define () ->
             @_source.login user, pass
             return
         create: (item, cb)  =>
-            @_source.create(item)
+            @_source.create(item, cb)
         update: (item, cb) =>
-            @source.update(item)
+            @source.update(item, cb)
         remove: (item, cb) =>
-            @_source.remove(item)
+            @_source.remove(item, cb)
         get: (item, cb) =>
-            if item && cb
+            if item and cb
                 return @_source.get(item, cb)
-            else if cb && !item
+            else if cb and !item
                 return @_source.getAll(cb)
     return DataSource

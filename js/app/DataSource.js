@@ -2,7 +2,7 @@
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  define(function() {
+  define(['PubSub'], function(PubSub) {
     var DataSource;
     DataSource = (function() {
       function DataSource(_source) {
@@ -20,15 +20,15 @@
       };
 
       DataSource.prototype.create = function(item, cb) {
-        return this._source.create(item);
+        return this._source.create(item, cb);
       };
 
       DataSource.prototype.update = function(item, cb) {
-        return this.source.update(item);
+        return this.source.update(item, cb);
       };
 
       DataSource.prototype.remove = function(item, cb) {
-        return this._source.remove(item);
+        return this._source.remove(item, cb);
       };
 
       DataSource.prototype.get = function(item, cb) {

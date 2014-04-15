@@ -18,14 +18,17 @@
         return this;
       }
 
-      GithubSource.prototype.login = function(user, pass) {
+      GithubSource.prototype.login = function(user, pass, cb) {
         var repo;
         this.github = new Octokit({
           username: user,
           password: pass
         });
         repo = this.github.getRepo('Corbzilla', 'Corbzilla.github.io');
-        return this.source = repo.getBranch();
+        this.source = repo.getBranch();
+        if ((cb != null) && typeof cb === 'function') {
+          return cb();
+        }
       };
 
       GithubSource.prototype.create = function(item, cb) {
@@ -35,9 +38,13 @@
           this._getIndex().then((function(_this) {
             return function(index) {
               var indexDom;
-              indexDom = $(index.contents).find('.posts').append(item);
+              indexDom = $(index.content);
+              indexDom.find('.posts').append(item);
               _this.source.write('index.html', indexDom.html(), '', false);
-              return _this.source.write(filename, item.body, "Added post " + filename, false);
+              _this.source.write(filename, item.body, "Added post " + filename, false);
+              if ((cb != null) && typeof cb === 'function') {
+                return cb();
+              }
             };
           })(this));
         }
@@ -45,7 +52,7 @@
       };
 
       GithubSource.prototype.update = function(item, cb) {
-        this.create(item);
+        this.create(item, cb);
         return this;
       };
 
@@ -54,6 +61,9 @@
         if (item && item.title) {
           filename = 'posts/Corbzilla/data/' + item.title.split(' ').join('-') + ".md";
           this.source.remove(filename, item.body, "Removed post " + filename, false);
+          if ((cb != null) && typeof cb === 'function') {
+            cb();
+          }
         }
         return this;
       };
@@ -63,7 +73,9 @@
         filename = 'posts/Corbzilla/data/' + item.title.split(' ').join('-') + ".md";
         this._getPost.then((function(_this) {
           return function(post) {
-            return cb(new BlogPost(post).display());
+            if ((cb != null) && typeof cb === 'function') {
+              return cb(new BlogPost(post).display());
+            }
           };
         })(this));
         return [];
@@ -92,7 +104,9 @@
                     newPost.date = 'March';
                     newPost.tags = 'new';
                     id++;
-                    return cb(newPost);
+                    if ((cb != null) && typeof cb === 'function') {
+                      return cb(newPost);
+                    }
                   });
                 })(post));
               }
