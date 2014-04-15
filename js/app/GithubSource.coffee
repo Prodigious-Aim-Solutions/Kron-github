@@ -10,7 +10,8 @@ define ['octokit', 'BlogPost'],  (Octokit, BlogPost) ->
             repo = @github.getRepo('Corbzilla', 'Corbzilla.github.io')
             @source = repo.getBranch()
             if cb? && typeof cb == 'function'
-                cb()
+                cb(null, success: true)
+            return
         create: (item, cb) =>
             if item? && item.title? && item.body?
                 filename = 'posts/Corbzilla/data/' + item.title.split(' ').join('-') + ".md"
@@ -20,7 +21,12 @@ define ['octokit', 'BlogPost'],  (Octokit, BlogPost) ->
                     @source.write('index.html', indexDom.html(), '', false)
                     @source.write(filename, item.body, "Added post #{ filename }", false)
                     if cb? && typeof cb == 'function'
-                        cb()
+                        cb(null, success: true)
+                    return
+                , (err) ->
+                    cb(err, success: false)
+                    return
+            cb('Create/Update Error: Incomplete Item', success: false)
             return @
         update: (item, cb) =>
             @create(item, cb)
@@ -28,15 +34,23 @@ define ['octokit', 'BlogPost'],  (Octokit, BlogPost) ->
         remove: (item, cb) =>
             if item && item.title
                 filename = 'posts/Corbzilla/data/' + item.title.split(' ').join('-') + ".md"
-                @source.remove(filename, item.body, "Removed post #{ filename }", false)
-                if cb? && typeof cb == 'function'
-                    cb()
+                @source.remove(filename, item.body, "Removed post #{ filename }", false).then () =>
+                    if cb? && typeof cb == 'function'
+                        cb(null, success: true)
+                        return
+                , (err) =>
+                    cb(err, success: false)
+                    return
             return @
         get: (item, cb) =>
             filename = 'posts/Corbzilla/data/' + item.title.split(' ').join('-') + ".md"
             @_getPost.then (post) =>
                 if cb? && typeof cb == 'function'
-                    cb(new BlogPost(post).display())
+                    cb(null, new BlogPost(post).display())
+                    return
+            , (err) =>
+                cb(err, success: false)
+                return
             return []
         getAll: (cb) =>
             id = 0
@@ -55,15 +69,24 @@ define ['octokit', 'BlogPost'],  (Octokit, BlogPost) ->
                             newPost.tags = 'new'
                             id++
                             if cb? && typeof cb == 'function'
-                                cb(newPost)
+                                cb(null, newPost)
+                , (err) =>
+                    cb(err, success: false)
+                    return
                 
             else
                 return []
         _getItems: () =>
-            return @source.contents('posts/Corbzilla/data', false)
+            if @source?
+                return @source.contents('posts/Corbzilla/data', false)
+            return
         _getPost: (post) =>
-            return @source.read("posts/Corbzilla/data/#{ post.name }")
+            if @source?
+                return @source.read("posts/Corbzilla/data/#{ post.name }")
+            return
         _getIndex: () =>
-            return @source.read('index.html')
+            if @source?
+                return @source.read('index.html')
+            return
         
     return GithubSource

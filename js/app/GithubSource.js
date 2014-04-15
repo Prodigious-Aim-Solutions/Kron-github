@@ -27,14 +27,16 @@
         repo = this.github.getRepo('Corbzilla', 'Corbzilla.github.io');
         this.source = repo.getBranch();
         if ((cb != null) && typeof cb === 'function') {
-          return cb();
+          cb(null, {
+            success: true
+          });
         }
       };
 
       GithubSource.prototype.create = function(item, cb) {
         var filename;
         if ((item != null) && (item.title != null) && (item.body != null)) {
-          filename = 'posts/Corbzilla/data/' + item.title.split(' ').join('-') + ".md";
+          filename = 'posts/Corbzilla//' + item.title.split(' ').join('-') + ".md";
           this._getIndex().then((function(_this) {
             return function(index) {
               var indexDom;
@@ -43,11 +45,20 @@
               _this.source.write('index.html', indexDom.html(), '', false);
               _this.source.write(filename, item.body, "Added post " + filename, false);
               if ((cb != null) && typeof cb === 'function') {
-                return cb();
+                cb(null, {
+                  success: true
+                });
               }
             };
-          })(this));
+          })(this), function(err) {
+            cb(err, {
+              success: false
+            });
+          });
         }
+        cb('Create/Update Error: Incomplete Item', {
+          success: false
+        });
         return this;
       };
 
@@ -60,10 +71,21 @@
         var filename;
         if (item && item.title) {
           filename = 'posts/Corbzilla/data/' + item.title.split(' ').join('-') + ".md";
-          this.source.remove(filename, item.body, "Removed post " + filename, false);
-          if ((cb != null) && typeof cb === 'function') {
-            cb();
-          }
+          this.source.remove(filename, item.body, "Removed post " + filename, false).then((function(_this) {
+            return function() {
+              if ((cb != null) && typeof cb === 'function') {
+                cb(null, {
+                  success: true
+                });
+              }
+            };
+          })(this), (function(_this) {
+            return function(err) {
+              cb(err, {
+                success: false
+              });
+            };
+          })(this));
         }
         return this;
       };
@@ -74,8 +96,14 @@
         this._getPost.then((function(_this) {
           return function(post) {
             if ((cb != null) && typeof cb === 'function') {
-              return cb(new BlogPost(post).display());
+              cb(null, new BlogPost(post).display());
             }
+          };
+        })(this), (function(_this) {
+          return function(err) {
+            cb(err, {
+              success: false
+            });
           };
         })(this));
         return [];
@@ -105,12 +133,18 @@
                     newPost.tags = 'new';
                     id++;
                     if ((cb != null) && typeof cb === 'function') {
-                      return cb(newPost);
+                      return cb(null, newPost);
                     }
                   });
                 })(post));
               }
               return _results;
+            };
+          })(this), (function(_this) {
+            return function(err) {
+              cb(err, {
+                success: false
+              });
             };
           })(this));
         } else {
@@ -119,15 +153,21 @@
       };
 
       GithubSource.prototype._getItems = function() {
-        return this.source.contents('posts/Corbzilla/data', false);
+        if (this.source != null) {
+          return this.source.contents('posts/Corbzilla/data', false);
+        }
       };
 
       GithubSource.prototype._getPost = function(post) {
-        return this.source.read("posts/Corbzilla/data/" + post.name);
+        if (this.source != null) {
+          return this.source.read("posts/Corbzilla/data/" + post.name);
+        }
       };
 
       GithubSource.prototype._getIndex = function() {
-        return this.source.read('index.html');
+        if (this.source != null) {
+          return this.source.read('index.html');
+        }
       };
 
       return GithubSource;

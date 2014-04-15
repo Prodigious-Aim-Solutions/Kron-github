@@ -8,6 +8,7 @@
       function Editor(ds, markdownEditor) {
         this.ds = ds != null ? ds : {};
         this.markdownEditor = markdownEditor != null ? markdownEditor : {};
+        this.onComplete = __bind(this.onComplete, this);
         this.savePost = __bind(this.savePost, this);
         this.startAutoSave = __bind(this.startAutoSave, this);
         this.submitMarkdown = __bind(this.submitMarkdown, this);
@@ -51,6 +52,15 @@
           date: moment()
         };
         localForage.setItem('currentPost', blogPost);
+      };
+
+      Editor.prototype.onComplete = function(err, data) {
+        if ((err != null) || data.success === false) {
+          $('.editor error').show();
+          $('.editor error').text("Could Not Add Resource");
+        } else {
+          $('.editor error').hide();
+        }
       };
 
       return Editor;
