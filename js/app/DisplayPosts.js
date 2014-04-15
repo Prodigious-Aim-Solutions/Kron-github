@@ -21,7 +21,7 @@
         return this;
       };
 
-      DisplayPosts.prototype.display = function(post) {
+      DisplayPosts.prototype.display = function(err, post) {
         var blogPost;
         blogPost = new BlogPost(post.id, post.title, post.body, post.tags, post.author, post.date, this.marked).display();
         return $('.posts').append(blogPost);

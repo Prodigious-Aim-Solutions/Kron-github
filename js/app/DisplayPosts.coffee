@@ -7,7 +7,7 @@ define ['BlogPost'], (BlogPost) ->
             output = ""
             @ds.get(null, @display)
             return @
-        display: (post) =>
+        display: (err, post) =>
             blogPost = new BlogPost(post.id, post.title, post.body, post.tags, post.author, post.date, @marked).display()
             $('.posts').append(blogPost)
         

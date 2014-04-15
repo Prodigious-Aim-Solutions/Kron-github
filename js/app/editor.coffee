@@ -33,5 +33,12 @@ define ['../../bower_components/marked/lib/marked', 'BlogPost', '../../bower_com
                 date: moment()
             localForage.setItem('currentPost', blogPost)
             return
+        onComplete: (err, data) =>
+            if err? or data.success == false
+                $('.editor error').show()
+                $('.editor error').text("Could Not Add Resource")
+            else
+                $('.editor error').hide()
+            return
 
     return Editor
