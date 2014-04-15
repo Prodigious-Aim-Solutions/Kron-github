@@ -1,7 +1,7 @@
 define ['../../bower_components/marked/lib/marked', 'BlogPost', '../../bower_components/localforage/dist/localforage'], (marked, BlogPost, localForage) ->
 
     class Editor
-        constructor:(@ds = {}, @markdownEditor = {}) ->
+        constructor:(@ds = {}, ) ->
             $('.btn-submit').on 'click', @submitMarkdown
             $('.title, .body').on 'keyup', @startAutoSave
             return @

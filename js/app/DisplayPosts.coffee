@@ -1,6 +1,6 @@
 define ['BlogPost'], (BlogPost) ->
     class DisplayPosts
-        constructor: (@ds = {}, @marked = {}) ->
+        constructor: (@ds = {}, ) ->
             @displayAll()
             return @
         displayAll: () =>
